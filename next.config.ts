@@ -1,8 +1,20 @@
-import type { NextConfig } from "next";
+const { NextFederationPlugin } = require("@module-federation/nextjs-mf");
 
-const nextConfig: NextConfig = {
-  /* config options here */
-  reactStrictMode: true,
+module.exports = {
+  //@ts-ignore
+  webpack: (config, { isServer }) => {
+    config.plugins.push(
+      new NextFederationPlugin({
+        name: "nextApp",
+        filename: "static/chunks/remoteEntry.js",
+        remotes: {
+          partners: "partners@http://localhost:9007/remoteEntry.js",
+        },
+        exposes: {},
+        shared: {},
+      })
+    );
+
+    return config;
+  },
 };
-
-export default nextConfig;
